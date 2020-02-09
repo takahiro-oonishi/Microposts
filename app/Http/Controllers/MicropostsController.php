@@ -11,7 +11,12 @@ class MicropostsController extends Controller
         $data = [];
         if (\Auth::check()) {
             $user = \Auth::user();
-            $microposts = $user->microposts()->orderBy('created_at', 'desc')->paginate(10);
+            /*
+            11.2
+            $microposts = $user->microposts()->orderBy('created_at', 'desc')->paginate(10); としていたのを
+            $microposts = $user->feed_microposts()->orderBy('created_at', 'desc')->paginate(10); に変更しています。
+            */
+            $microposts = $user->feed_microposts()->orderBy('created_at', 'desc')->paginate(10);
             
             $data = [
                 'user' => $user,
