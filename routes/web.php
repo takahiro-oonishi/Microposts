@@ -1,4 +1,5 @@
 <?php
+//ルーターの設定
 
 /*
 |--------------------------------------------------------------------------
@@ -23,7 +24,10 @@ Route::post('login', 'Auth\LoginController@login')->name('login.post');
 Route::get('logout', 'Auth\LoginController@logout')->name('logout.get');
 
 // ユーザ機能
+/*Route::group() でルーティングのグループを作り
+  その際に ['middleware' => ['auth']] を加えることで、このグループに書かれたルーティングは必ずログイン認証を確認させます。
+*/
 Route::group(['middleware' => ['auth']], function () {
-Route::resource('users', 'UsersController', ['only' => ['index', 'show']]);
-Route::resource('microposts', 'MicropostsController', ['only' => ['store', 'destroy']]);   
+    Route::resource('users', 'UsersController', ['only' => ['index', 'show']]);//['only' => ['index', 'show']] とすることで実装するアクションを絞り込むことが可能です。
+    Route::resource('microposts', 'MicropostsController', ['only' => ['store', 'destroy']]);   
 });

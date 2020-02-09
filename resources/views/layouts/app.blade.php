@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja"> {{--共通レイアウト--}}
     <head>
         <meta charset="utf-8">
         <title>Microposts</title>

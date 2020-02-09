@@ -1,8 +1,10 @@
 <?php
-
+//ログイン認証のコントローラー
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+//ログイン認証のコードの実態は AuthenticatesUsers トレイトです。
+//Router で設定した showLoginForm や login はこちらに定義されています。
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
@@ -25,6 +27,8 @@ class LoginController extends Controller
      *
      * @var string
      */
+     //ログインページのフォームでログイン認証が成功した際に、
+     //ログイン後は、トップページにリダイレクトされます。
     protected $redirectTo = '/';
 
     /**
