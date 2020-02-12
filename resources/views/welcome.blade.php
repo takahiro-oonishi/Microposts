@@ -1,5 +1,4 @@
 {{-- トップページ　--}}
-{{-- トップページにユーザ登録リンクを作成 --}}
 
 @extends('layouts.app')
 
@@ -7,7 +6,6 @@
     @if (Auth::check())
         <div class="row">
             <aside class="col-sm-4">
-                {{--  共通化した View を @include  --}}
                 @include('users.card', ['user' => Auth::user()])
             </aside>
             <div class="col-sm-8">
