@@ -20,6 +20,7 @@
                             <li class="dropdown-item"><a href="#">My profile</a></li>
                             <li class="dropdown-divider"></li>
                             <li class="dropdown-item">{!! link_to_route('logout.get', 'Logout') !!}</li>
+                            <li class="dropdown-item">{!! link_to_route('users.favorites', 'favorite',['id'=>$user->id]) !!}</li>　
                         </ul>
                     </li>
                 @else

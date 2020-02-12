@@ -21,11 +21,17 @@ class Controller extends BaseController
         $count_microposts = $user->microposts()->count();
         $count_followings = $user->followings()->count();
         $count_followers = $user->followers()->count();
+        $count_favorites = $user->favorites()->count();//13.1 お気に入りの数を取得
+        //$count_favorited = $user->favorited()->count();//13.1 お気に入りされたの数を取得
+        
+        
 
         return [
             'count_microposts' => $count_microposts,
             'count_followings' => $count_followings,
             'count_followers' => $count_followers,
+            'count_favorites' => $count_favorites,//13.1
+            //'count_favorited' => $count_favorited,//13.1
         ];
     }
     

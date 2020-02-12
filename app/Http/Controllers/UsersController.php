@@ -64,4 +64,44 @@ class UsersController extends Controller
 
         return view('users.followers', $data);
     }
+    
+    //10.4 UsersController@followings, followers
+    //Controller: こちらは Userの情報を取得できれば良いので、UsersController へ記述します。
+    //13.1お気に入りに関するアクションとビューの作成
+    //User モデルの favorites() から一覧の取得ができるので UsersController にアクションを追加すれば良いでしょう
+    
+    public function favorites($id)//これは親クラスである Controller クラスから継承した自クラスの counts メソッドを呼んでいる
+    {
+        $user = User::find($id);
+        $microposts = $user->favorites()->paginate(10);
+
+        $data = [
+            'user' => $user,
+            'microposts' => $microposts, //usersじゃなく、microposts   ??????　
+        ];
+
+        $data += $this->counts($user);
+
+        return view('users.favorites', $data);
+    }
+
+    
+    /*
+    public function favorited($id)
+    {
+        $user = User::find($id);
+        $followers = $user->followers()->paginate(10);
+
+        $data = [
+            'user' => $user,
+            'users' => $followers,
+        ];
+
+        $data += $this->counts($user);
+
+        return view('users.followers', $data);
+    }
+    */
+    
+    
 }

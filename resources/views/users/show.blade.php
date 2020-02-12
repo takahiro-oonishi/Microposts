@@ -4,13 +4,14 @@
     <div class="row">
         <aside class="col-sm-4">
             {{--  共通部の抜出 --}}
-            {{-- フォロー／アンフォローボタンの設置 --}}
+            {{-- 　card.blade.phpを（中にフォロー／アンフォローボタン）の設置　 --}}
             @include('users.card', ['user' => $user])
         </aside>
         <div class="col-sm-8">
             {{--  共通部の抜出 --}}
             {{--  ユーザ詳細 の View も共通化したものを @include  --}}
             @include('users.navtabs', ['user' => $user])
+            {{--  
             @if (Auth::id() == $user->id)
                 {!! Form::open(['route' => 'microposts.store']) !!}
                     <div class="form-group">
@@ -19,6 +20,7 @@
                     </div>
                 {!! Form::close() !!}
             @endif
+            --}}
             @if (count($microposts) > 0)
                 @include('microposts.microposts', ['microposts' => $microposts])
             @endif

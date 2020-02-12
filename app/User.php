@@ -127,4 +127,82 @@ class User extends Authenticatable
         */
         return Micropost::whereIn('user_id', $follow_user_ids);
     }
+    
+    /*
+    User のモデルファイルに多対多の関係を記述します。
+    そのためには belongsToMany メソッドを���用します。
+    フォロー関係の場合、多対多の関係がどちらも User に対するものなので、
+    どちらも User のModelファイルに記述します。
+    */
+    /*
+    ( followings を例にとると) belongsToMany() では、
+    第一引数に得られる Model クラス (User::class) を指定し、
+    第二引数に中間テーブル (user_follow) を指定し、
+    第三引数に中間テーブルに保存されている自分の id を示すカラム名 (user_id) を指定し、
+    第四引数に中間テーブルに保存されている関係先の id を示すカラム名 (follow_id) を指定します。
+    followersの場合、第三引数と第四引数が逆になります。
+    */
+    //13.1 お気に入りの一覧を取得する機能は User モデルに favorites() のような名前の関数を用意し、belongsToMany() を指定すると良いでしょう。
+    //投稿を取得したいので、第一引数には、 Micropost::class を指定すべき
+    public function favorites()//お気に入りの一覧を取得する機能は User モデルに favorites() のような名前の関数を用意:　参照、followingsは「user_id のUser は follow_id の User をフォローしている」
+    {
+        return $this->belongsToMany(Micropost::class, 'favorites', 'user_id', 'micropost_id')->withTimestamps();
+    }
+    /*
+    public function favorited()//お気に入りされた:参照、followers は「follow_id のUser は user_id の User からフォローされている
+    {
+        return $this->belongsToMany(User::class, 'favorites', 'micropost_id', 'user_id')->withTimestamps();
+    }
+    */
+    /*
+    フォロー／アンフォローするときには、2つ注意することがあります。
+	既にフォローしているか
+    相手が自分自身ではないか
+    */
+    /*
+    フォロー／アンフォローとは、中間テーブルのレコードを保存／削除することです。
+    そのために attach() と detach() というメソッドが用意されているので、それを使用します。
+    */
+    /*13.1
+    実際の中間テーブルへのデータ登録／削除は
+    User モデルに favorite() や unfavorite() のような名前の関数を作成して、そこに構築してください。
+    その際、既にお気に入りに追加している Micropost かどうかを調べる処理が必要です
+    */
+    public function favorite($micropostId)//$micropostIdであってる？
+    {
+        // 既にお気に入りに追加しているの確認
+        $exist = $this->is_favorites($micropostId);
+    
+        if ($exist) {
+            // 既にお気に入りしていれば何もしない
+            return false;
+        } else {
+            // 未お気に入りであればフォローする
+            $this->favorites()->attach($micropostId);
+            return true;
+        }
+    }
+    
+    public function unfavorite($micropostId)
+    {
+        // 既にお気に入りに追加しているの確認
+        $exist = $this->is_favorites($micropostId);
+    
+        if ($exist) {
+            // 既にお気に入りしていればフォローを外す
+            $this->favorites()->detach($micropostId);
+            return true;
+        } else {
+            // 未お気に入りであれば何もしない
+            return false;
+        }
+    }
+    
+    public function is_favorites($micropostId)
+    {
+        return $this->favorites()->where('micropost_id', $micropostId)->exists();//引数の $micropostId と比較しようとしていますよね。ということは、 micropost_id というカラム名にする必要がある
+    }
+
+
+
 }
