@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\User; // 追加
 use App\Micropost; // 追加
 
+
+use App\Message;
+
 class UsersController extends Controller
 {
     public function index()
@@ -84,24 +87,45 @@ class UsersController extends Controller
 
         return view('users.favorites', $data);
     }
-
     
-    /*
-    public function favorited($id)
+    public function messages($id)
+    {
+        $query =  Message::orWhere(function($query) use ($id) {
+                        // 自分から相手に送ったというwhere文を作成
+                        $query->where('from_id', '=', \Auth::id())
+                              ->where('to_id', '=', $id);
+                    })->orWhere(function($query) use ($id) {
+                        // 自分に相手から送られたというwhere文を作成
+                        $query->where('to_id', '=', \Auth::id())
+                              ->where('from_id', '=', $id);
+                    });
+                    
+        $user = User::find($id);
+        $messages = $query->orderBy('created_at', 'asc')->paginate(10);//descで降順、ascで昇順
+        
+        $data = [
+            'user' => $user,
+            'messages' => $messages,];
+        
+        $data += $this->counts($user);
+        
+        return view('users.messages', $data);
+    }
+    
+    public function messagesReceived($id)
     {
         $user = User::find($id);
-        $followers = $user->followers()->paginate(10);
+        $messagesReceived = $user->messagesReceived()->paginate(10);
 
         $data = [
             'user' => $user,
-            'users' => $followers,
+            'users' => $messagesReceived,
         ];
 
         $data += $this->counts($user);
 
-        return view('users.followers', $data);
+        return view('users.messagesReceived', $data);
     }
-    */
-    
+
     
 }
